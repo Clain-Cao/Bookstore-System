@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Management</title>
+		<style type="text/css">
+			.content{
+				position : relative;
+				margin : 0 auto;
+				top : 20%;
+			}
+      .bg-fix-div{
+        background: url(" {% static 'images/cup.jpg'%} ") no-repeat;
+        background-size:cover;
+        background-attachment: fixed;
+        }
+		</style>
+    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+   	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="{% static 'js/validator.js' %}"></script> -->
+    <script type="text/javascript">
+      id_status = 0
+      path_status = 0
+    	function Info(){
+    		window.alert("Author  :   caohaiming\nE-mail   :   hoiming.wk@foxmail.com\nTelephone :  18022178322");
+    	}
+      function book_id_verify(object){
+        console.log(object.value);
+        var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+        if (object.value != "")
+            $.ajax({
+              url: "../book_id_verify/",
+              type: "post",
+              data:{"id":object.value,'csrfmiddlewaretoken': csrf},
+              success: function(result){
+                if (result == 1){
+                  $("#book_id").html("<font color='red'><h3>ID 已存在<h3></font>");
+                  id_status = 0
+                }
+                else{
+                  $("#book_id").html("<font color='green'><h3>ID 可以使用<h3></font>");
+                  id_status = 1
+                }
+              }
+            });
+        else{
+            $("#book_id").html("<font color='red'><h3>请输入唯一的 ID 编号<h3></font>");
+        }
+        ChangeSubmit();
+      }
+      function PathCheck(){
+        // console.log($("#inputPath").val());
+        if($("#inputPath").val() != ""){
+          $("#book_path").html("");
+          path_status = 1
+        }
+        else{
+          $("#book_path").html("<font color='red'><h3>请输入书的地址<h3></font>");
+          path_status = 0
+        }
+        ChangeSubmit();
+      }
+      function ChangeSubmit(){
+        console.log("path :" +  path_status , "id : " + id_status);
+        if(path_status && id_status){
+          $('#submit_id').removeAttr("disabled");
+        }
+        else{
+          $('#submit_id').attr("disabled",true);
+        }
+      }
+    </script>
+</head>
+<body class="bg-fix-div">
+	<!--图书馆管理系统页面-->
+  	<nav class="navbar navbar-inverse">
+    		<div class="container-fluid">
+      			<div class="navbar-header">
+        				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        					<span class="sr-only">Toggle navigation</span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+        				</button>
+        				<a class="navbar-brand" href="../logout/">图书管理系统</a>
+      			</div>
+      			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+          				<li class="active"><a href="#">书籍 <span class="sr-only">(current)</span></a></li>
+          				<li><a href = "javascript:void(0);" onclick = "Info()" >作者</a></li>
+                  <li>
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多操作<span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li><a href="../edituser/">修改个人信息</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a href="../logout/">注销</a></li>
+                      </ul>
+                  </li>
+        			</ul>
+              <form class="navbar-form navbar-left">
+                  <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Search">
+                  </div>
+                  <button type="submit" class="btn btn-default">提交</button>
+              </form>
+              <ul class="nav navbar-nav navbar-right">
+                {% if request.user.last_name == None%}
+                  <li><a>欢迎回来 ： {{request.user}}</a></li>
+                {% else%}
+                  <li><a>欢迎回来 ： {{request.user.first_name}}</a></li>
+                {% endif %}
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多帮助<span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li><a href="#">关于我们</a></li>
+                          <li><a href="#">咨询</a></li>
+                          <li><a href="#">联系电话</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a href="#">课设作者</a></li>
+                      </ul>
+                  </li>
+              </ul>
+      			</div>
+    		</div>
+  	</nav>
+  	<div class="container">
+      	<div class="row">
+            <div class="col-md-12">
+                  <div class="panel panel-primary">
+            					<div class="panel-heading clearfix">
+              					  <h3 class="panel-title">增加书的种类<span class="glyphicon glyphicon-leaf pull-right"></span></h3>
+            					</div>
+      		        </div>
+                  <form data-toggle="validator" role="form" method="post" action="../add_book/">
+                    {% csrf_token %}
+                      <div class="form-group">
+                          <label for="BooktId" class="control-label " ><h3>Book ID</h3></label>
+                          <input type="text" name="book_id" class="form-control" placeholder="Book ID : " value = "" onblur="book_id_verify(this)" required>
+                          <span class="help-block" id = "book_id"></span>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputPath" class="control-label"><h3>Book Path</h3></label>
+                        <input type="text" name="book_path" class="form-control" id="inputPath" placeholder=" Book Address :" onblur="PathCheck()" required>
+                        <span class="help-block" id = "book_path"></span>
+                      </div>
+                      <div class="form-group">
+                        <label for="InputBookName" class="control-label"><h3>Book Name</h3></label>
+                        <input type="text" name="book_name" class="form-control" id="InputBookName" placeholder="Book Name : " required>
+                      </div>
+                      <div class="form-group">
+                        <label for="InputPrice" class="control-label"><h3>Price</h3></label>
+                        <input type="text" name="book_price" class="form-control" id="InputPrice" placeholder="price（RMB）:" required>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-group col-sm-6">
+                          <label for="InputAuthor" class="control-label"><h3>Author</h3></label>
+                          <input type="text" name="author" class="form-control" id="InputAuthor" placeholder="Author :" required>
+                        </div>
+                        <div class="form-group col-sm-6">
+                          <label for="InputOriginal" class="control-label"><h3>Original</h3></label>
+                          <input type="text" name="original" class="form-control" id="InputOriginal" placeholder="Original :">
+                        </div>
+                        <div class="help-block with-errors disabled"></div>
+                      </div>
+                      <!-- <div class="form-group">
+                        <label for="inputPassword" class="control-label help-block"><h3>Password</h3></label>
+                        <div class="form-inline row">
+                          <div class="form-group col-sm-6">
+                            <input type="password" name="password" data-toggle="validator" data-minlength="6" class="form-control" id="inputPassword" placeholder="Password" required>
+                            <span class="help-block"><h4>最少需要6个字符</h4></span>
+                          </div>
+                          <div class="form-group col-sm-6">
+                            <input type="password" class="form-control" id="inputPasswordConfirm" data-match="#inputPassword" data-match-error="两次输入的密码不匹配！" placeholder="Confirm" required>
+                            <div class="help-block with-errors"></div>
+                          </div>
+                        </div>
+                      </div> -->
+                      <div class="form-group">
+                        <div class="col-sm-6">
+                          <input type="submit" id="submit_id" class="btn btn-primary" value="submit" disabled>
+                        </div>
+                      </div>
+
+                  </form>
+            </div>
+      	</div>
+  	</div>
+</body>
+</html>

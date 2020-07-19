@@ -1,0 +1,38 @@
+{% load static %}
+
+
+body{
+	background: url("../images/bg.jpg") no-repeat 0px 0px;
+	background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.top-bar-agile{
+	 width: 62%;
+	 margin:0 auto;
+	 padding:40px 0;
+}
+.content-w3{
+      background: none transparent no-repeat 0px -89px;
+    background-size: cover;
+    width: 62%;
+    margin: 0 auto;
+    min-height: 511px;
+}
+.content-w3 h1 {
+    font-size: 200px;
+    letter-spacing: 5px;
+    text-align: center;
+    font-weight: 700;
+    color: #fff;
+	font-family: 'Ravi Prakash', cursive;
+	text-shadow:9px 9px 3px hsl(206, 15%, 40%);
+}
+.content-w3 h2{
+	font-size:30px;
+	letter-spacing:3px;
+	text-align:center;
+	color:#fff;
+}

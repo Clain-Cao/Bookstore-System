@@ -1,0 +1,10 @@
+body{
+  display: block;
+}
+body{
+text-align: center;
+background: url("../images/bg.jpg") 0px 0px no-repeat;
+background-size:cover;
+background-attachment: fixed;
+}
+img{max-width:100%;}

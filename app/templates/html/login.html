@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+
+<head>
+
+	<title>Login</title>
+	<script type="text/javascript">
+			function undisplay(obj){
+				obj.placeholder = "";
+			}
+			function display(object,str){
+					object.placeholder = str;
+			}
+	</script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href= "{% static 'css/style.css' %}" />
+</head>
+
+<body>
+	<br><br><br><br><br><br>
+	<div class="padding-all" >
+		<div class="header">
+			<h1>Login</h1>
+		</div>
+
+		<div class="design-w3l">
+			<div class="mail-form-agile">
+				<p style="color: red; font-weight: 900"></p>
+				<form action="../home/" method="post" target="_top">
+					{% csrf_token %}
+					<input type="hidden"  name = "method" value="login"/>
+					<input type="text" name="username" placeholder="Username " onfocus="undisplay(this)" onblur="display(this,'Username')" value=""/>
+					<input type="password"  name="password" class="padding" placeholder="Password" onfocus="undisplay(this)" onblur="display(this,'Password')" value=""/>
+					<input type="submit" value="login" id="login_button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type ="submit" formaction = "../register/" value = "SignUp"/>
+
+				</form>
+			</div>
+		  <div class="clear"> </div>
+		</div>
+
+	</div>
+</body>
+</html>

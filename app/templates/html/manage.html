@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Management</title>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'css/background.css' %}"> -->
+    <link href="{% static 'css/fail_style.css' %}" rel='stylesheet' type='text/css'/>
+   	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    	function edit(){
+    		window.alert("111");
+    	}
+      function Info(){
+    		window.alert("个人信息如下：\n\n学校   :   陕西科技大学\n学院   :   电子信息与人工智能学院\n姓名   :   曹海铭\n班级   :   计算机173\n学号   :   201706020113");
+    	}
+      function Author(){
+        window.alert("Author  :   caohaiming\nE-mail  :   hoiming.wk@foxmail.com\nTel  :   18022178322")
+      }
+      function edit(object){
+          var trobj = object.parentNode.parentNode; //获得按钮所在行的行对象
+          var tdobj = trobj.getElementsByTagName("td");
+          for(var i = 0;i<tdobj.length;i++){
+              if (i == 1) continue;
+              if (i == 0){
+               tdobj[i].innerHTML ="<input type='text' class = 'form-control' id = 'a" + tdobj[i].innerText + "' style='width:100%' rows='1' value='" + tdobj[i].innerText +  "' disabled/>";
+              }
+              //循环把每一个单元格变成input类型
+              if (i > 0 && i < tdobj.length - 1){
+               // console.log(tdobj[i].innerText);
+               tdobj[i].innerHTML ="<input type='text' class = 'form-control' id='a" + tdobj[i].innerText + "' style='width:100%' rows='1' value='" + tdobj[i].innerText +  "'/>";
+              }
+              if (i == tdobj.length - 1 ){
+               tdobj[i].innerHTML ="<input type='button' class='btn btn-danger btn-sm' value = '完成' onclick = 'finish(this)'>";
+              }
+          }
+       }
+       function finish(object){
+           var trobj = object.parentNode.parentNode;
+           var tdobj = trobj.getElementsByTagName("input");
+           var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+           // for (var i = 0;i < tdobj.length-1;i++){
+           //     console.log(tdobj[i]);
+           // }
+           $.ajax({
+             url : "../edit_book/",
+             type: "post",
+             data : {"id":tdobj[0].value,"name":tdobj[1].value,"author":tdobj[2].value,"original":tdobj[3].value,"price":tdobj[4].value,'csrfmiddlewaretoken': csrf},
+             success:function(result){
+                if (result != null){
+                  // for (var i = 0;i < tdobj.length - 1 ;i++){
+                  //   console.log(tdobj[i].value + " 更改前 ：");
+                  //   console.log(tdobj[i]);
+                  //   tdobj[i].innerHTML = "<td>" + tdobj[i].innerText + "</td>";
+                  //   console.log(tdobj[i].value + " 更改后 ：");
+                  //   console.log(tdobj[i]);
+                  // }
+                  // tdobj[tdobj.length - 1] = "<td class='text-center'>" + "<input type='button' class='btn btn-primary btn-sm ' onclick = 'edit(this)' value = '编辑'><input type='button' class='btn btn-danger btn-sm ' value = '删除'></td>"
+                  window.alert("修改成功");
+                }
+                else{
+                  window.alert("修改失败");
+                }
+              location.reload();
+             }
+           });
+       }
+       function DeleteBook(object){
+           var trobj = object.parentNode.parentNode;
+           var tdobj = trobj.getElementsByTagName("td");
+           var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+           console.log(tdobj[0].innerText);
+           if (confirm("确定要删除\n\n编号为     ："  + tdobj[0].innerText + "\n名字为     ：" + tdobj[2].innerText + "\n作者为     ：" + tdobj[3].innerText + "\n出版社为  ："+ tdobj[4].innerText+ "\n价格为     ："+ tdobj[5].innerText +"\n\n的数据吗？")){
+             $.ajax({
+               url : "../delete_book/",
+               type: "post",
+               data : {'id':tdobj[0].innerText,'csrfmiddlewaretoken': csrf},
+               success:function(result){
+                  if (result != null){
+                    window.alert("删除成功");
+                  }
+                  else{
+                    window.alert("删除失败，请重新尝试或联系维修人员");
+                  }
+                  location.reload();
+               }
+             });
+           }
+       }
+    </script>
+    <style type="text/css">
+
+    </style>
+
+</head>
+<body>
+	<!--图书馆管理系统页面-->
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../logout/">图书管理系统</a>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    			<ul class="nav navbar-nav">
+      				<li class="active"><a href="#">书籍 <span class="sr-only">(current)</span></a></li>
+      				<li><a href = "javascript:void(0);" onclick = "Info()" >基本信息</a></li>
+              <li>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多操作<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="../edituser/">修改个人信息</a></li>
+                      <li><a href="../bookstore/">进入用户系统</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="../logout/">注销</a></li>
+                  </ul>
+              </li>
+    			</ul>
+          <form class="navbar-form navbar-left">
+              <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search">
+              </div>
+              <button type="submit" class="btn btn-default">提交</button>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+            {% if request.user.last_name == None%}
+              <li><a>欢迎回来 ： {{request.user}}</a></li>
+            {% else%}
+              <li><a>欢迎回来 ： {{request.user.first_name}}</a></li>
+            {% endif %}
+              <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多帮助<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="#">关于我们</a></li>
+                      <li><a href="#">咨询</a></li>
+                      <li><a href="#">联系电话</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="javascript:void(0);" onclick="Author()">作者</a></li>
+                  </ul>
+              </li>
+          </ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+	        <div class="col-md-2">
+	            <div class="list-group nav nav-tabs" id="main_menu">
+        					<a href="#BookList" class="list-group-item in active" data-toggle="tab">图书列表</a>
+        					<a href="#UserList" class="list-group-item" data-toggle="tab" >用户列表</a>
+        					<a href="#" class="list-group-item" data-toggle="tab">关于课设</a>
+				      </div>
+	        </div>
+	        <div class="col-md-10" >
+	            <div class="panel panel-primary">
+        					<div class="panel-heading clearfix">
+                      <h3 class="panel-title">图书管理系统<span class="glyphicon glyphicon-leaf pull-right"></span></h3>
+        					</div>
+        					<div class="tab-pane fade panel-body text-center center-block in active" style="font-size:22px" id="BookList">
+                      <form class="form-inline pull-right" action = "../search/" method = "get">
+                        {% csrf_token %}
+                        <input type = "submit" class="btn btn-success " formaction = "../AddBookPage/" value = "Add" formmethod="post"/>
+                        <div class="form-group">
+                      			<div class="input-group">
+                                <!-- <span class="input-group-addon">@</span> -->
+                                <div class="input-group-btn">
+                                    <select name="Method" class="form-control" >
+                                        <option >Number Search</option>
+                                        <option >Book Search</option>
+                                        <option >Author Search</option>
+                                        <option >Original Search</option>
+                                    </select>
+                                </div>
+                      		  		<input type="text" class="form-control" name = "SearchKey" placeholder="Primary Key">
+                      			</div>
+                      			<input type="submit" class="btn btn-primary" value = "Search" name = "search">
+                          	<input type = "submit" class="btn btn-primary" value = "Dsiplay All Books" id = "show_all_button" formaction="../query/">
+                        </div>
+                      </form>
+                      <br><br>
+          						<table class="table table-hover table-striped table-bordered">
+          						    <thead >
+          						        <tr class = "text-center">
+          						            <th class = "text-center">编号</th>
+          						            <th class = "text-center">图片</th>
+          						            <th class = "text-center">书名</th>
+          						            <th class = "text-center">作者</th>
+          						            <th class = "text-center">出版社</th>
+          						            <th class = "text-center">价格</th>
+          						            <th class="text-center">操作</th>
+          						        </tr>
+          						    </thead>
+          						    <tbody>
+                            <!-- 输入的地方 -->
+                            {% for element in books_list.object_list %}
+                              <tr>
+                                  <td style="text-align:center;vertical-align:middle;margin:auto">{{element.id}}</td>
+                                  <td>
+                                    <img alt="image" src="{% static  element.image%}" height = "70px" width = "60px">
+                                  </td>
+                                  <td style="text-align:center;vertical-align:middle;margin:auto">{{element.name}}</td>
+                                  <td style="text-align:center;vertical-align:middle;margin:auto">{{element.author}}</td>
+                                  <td style="text-align:center;vertical-align:middle;margin:auto">{{element.original}}</td>
+                                  <td style="text-align:center;vertical-align:middle;margin:auto">{{element.price}}</td>
+                                  <td style="text-align:center;vertical-align:middle;margin:auto" class="text-center">
+                                      {% csrf_token %}
+                                      <input type="button" class="btn btn-primary btn-sm " onclick = "edit(this)" value = "编辑">
+                                      <input type="button" class="btn btn-danger btn-sm " onclick = "DeleteBook(this)" value = "删除">
+                                  </td>
+                              </tr>
+                            {% endfor %}
+          						    </tbody>
+          						</table>
+          						<nav aria-label="Page navigation">
+            							<ul class="pagination pull-right">
+                            {% if books_list.has_previous %}
+                              <li>
+                									<a href="?page={{ books_list.previous_page_number }}" aria-label="Previous">
+                									  <span aria-hidden="true">&laquo;</span>
+                									</a>
+              								</li>
+                            {% endif %}
+                                  <!-- 输入页码的地方 -->
+                            {% for pg in books_list.paginator.page_range %}
+                              {% if books_list.number == pg %}
+                                  <li class = "active"> <a href="?page={{pg}}">{{pg}}</a> </li>
+                              {% else %}
+                                  <li> <a href="?page={{pg}}">{{pg}}</a> </li>
+                              {% endif %}
+                            {% endfor %}
+                            {% if books_list.has_next %}
+              								<li>
+                									<a href="?page={{books_list.next_page_number}}" aria-label="Next">
+                									  <span aria-hidden="true">&raquo;</span>
+                									</a>
+              								</li>
+                            {% endif %}
+            							</ul>
+          						</nav>
+        					</div>
+				      </div>
+	        </div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+  <meta charset="ISO-8859-1">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+  <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+  <script src="{% static 'js/post_crsf_token.js' %}"></script>
+  <script src = " {% static 'js/SignUpCheck.js' %}"></script>
+  <title>register</title>
+</head>
+	<br><br><br><br>
+	<div class="padding-all">
+	    <div class="header">
+	        <h1>Register</h1>
+	    </div>
+
+	    <div class="design-w3l">
+	        <div class="mail-form-agile">
+	            <!-- <p style="color: red; font-weight: 900" >input your account</p> -->
+	            <form action="/SignUp" method="post" class = 'signup inline' id = 'sign_up_form'>
+                  {% csrf_token %}
+                  <tr>
+                    <td>
+                      <input type="text" placeholder = "Username" name="username" value = "" onfocus="undisplay(this)" onblur="display(this,'Username');AutoCheck(this)"/>
+                      <br/><br/>
+                      <span id = 'username_id' hidden>user placeholder</span><br/><br/><br/>
+                    </td>
+                    <td>
+                      <input type="password" placeholder = "Password" name="password" class="padding" value="" onfocus="undisplay(this)" onblur="display(this,'Password');AutoCheck(this)"/>
+                      <span id = 'password_id' hidden>password placeholder</span><br/><br/><br/>
+                    </td>
+                    <td>
+                      <input type="text" placeholder = "E-mail" name="email" value="" onfocus="undisplay(this)" onblur="display(this,'E-mail');AutoCheck(this)"/>
+                      <br/><br/><br/>
+                      <span id = 'email_id' class = ''hidden>e-mail placholder</span><br/><br/><br/>
+                    </td>
+                  </tr>
+	                <input type="submit" value="Sign Up" id = "sign_up" disabled/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	                <input type = "submit" value = "Go Back" formaction = "../login/"/>
+	            </form>
+	        </div>
+	        <div class="clear"> </div>
+	    </div>
+
+	</div>
+</body>
+</html>

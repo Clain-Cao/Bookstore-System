@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Management</title>
+		<style type="text/css">
+			.content{
+				position : relative;
+				margin : 0 auto;
+				top : 20%;
+			}
+      .bg-fix-div{
+        background: url(" {% static 'images/cup.jpg'%} ") no-repeat;
+        background-size:cover;
+        background-attachment: fixed;
+        }
+		</style>
+    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+   	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/validator.js' %}"></script>
+    <script type="text/javascript">
+    	function edit(){
+    		window.alert("111");
+    	}
+      function Info(){
+    		window.alert("个人信息如下：\n\n学校   :   陕西科技大学\n学院   :   电子信息与人工智能学院\n姓名   :   曹海铭\n班级   :   计算机173\n学号 :  201706020113");
+    	}
+      function Author(){
+        window.alert("Author  :   caohaiming\nE-mail  :   hoiming.wk@foxmail.com\nTel  :   18022178322")
+      }
+
+    </script>
+</head>
+<body class="bg-fix-div">
+	<!--图书馆管理系统页面-->
+  	<nav class="navbar navbar-inverse">
+    		<div class="container-fluid">
+      			<div class="navbar-header">
+        				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        					<span class="sr-only">Toggle navigation</span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+        				</button>
+        				<a class="navbar-brand" href="../logout/">图书管理系统</a>
+      			</div>
+      			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+            				<li><a href="../manage/">书籍 <span class="sr-only">(current)</span></a></li>
+            				<li><a href = "javascript:void(0);" onclick = "Info()" >基本信息</a></li>
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多操作<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../edituser/">修改个人信息</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="../logout/">注销</a></li>
+                        </ul>
+                    </li>
+          			</ul>
+                <form class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default">提交</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                  {% if request.user.last_name == None%}
+                    <li><a>欢迎回来 ： {{request.user}}</a></li>
+                  {% else%}
+                    <li><a>欢迎回来 ： {{request.user.first_name}}</a></li>
+                  {% endif %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多帮助<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">关于我们</a></li>
+                            <li><a href="#">咨询</a></li>
+                            <li><a href="#">联系电话</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="Author()">作者</a></li>
+                        </ul>
+                    </li>
+                </ul>
+      			</div>
+    		</div>
+  	</nav>
+  	<div class="container">
+      	<div class="row">
+
+            <div class="col-md-10">
+                  <div class="panel panel-primary">
+            					<div class="panel-heading clearfix">
+              					  <h3 class="panel-title">修改个人信息<span class="glyphicon glyphicon-leaf pull-right"></span></h3>
+            					</div>
+      		        </div>
+                  <form data-toggle="validator" role="form" method="post" action="../edit/">
+                    {% csrf_token %}
+                      <div class="form-group">
+                          <label for="inputName" class="control-label " ><h3 class = "content-w3">Username</h3></label>
+                          <input type="text" name="username" class="form-control" id="inputName" placeholder="{{user_info.username}}" disabled>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail" class="control-label"><h3>Email</h3></label>
+                        <input type="email" name="email" class="form-control" id="inputEmail" value="{{user_info.email}}" placeholder="Email :" data-error="你输入的不是一个有效的邮件地址！" required>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                        <label for="InputFirstName" class="control-label"><h3>Firstname</h3></label>
+                        <input type="text" name="first_name" class="form-control" id="InputFirstName" placeholder="first name : ( Optional )" value="{{user_info.first_name}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="InputLastName" class="control-label"><h3>LastName</h3></label>
+                        <input type="text" name="last_name" class="form-control" id="InputLastName" placeholder="last name: ( Optional ) " value="{{user_info.last_name}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputPassword" class="control-label help-block"><h3>Password</h3></label>
+                        <div class="form-inline row">
+                          <div class="form-group col-sm-6">
+                            <input type="password" name="password" data-toggle="validator" data-minlength="6" class="form-control" id="inputPassword" placeholder="Password" required>
+                            <span class="help-block"><h4>最少需要8个字符</h4></span>
+                          </div>
+                          <div class="form-group col-sm-6">
+                            <input type="password" class="form-control" id="inputPasswordConfirm" data-match="#inputPassword" data-match-error="两次输入的密码不匹配！" placeholder="Confirm" required>
+                            <div class="help-block with-errors"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                  </form>
+            </div>
+      	</div>
+  	</div>
+</body>
+</html>

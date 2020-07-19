@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+<head>
+	<title>Error Page</title>
+	<link href="{% static 'css/fail_style.css' %}" rel='stylesheet' type='text/css'/>
+  <link href="{% static 'css/style.css' %}" rel='stylesheet' type='text/css'/>
+
+</head>
+<body>
+	<div class="top-bar-agile">
+		<div>
+		</div>
+		<div>
+		</div>
+	</div>
+	<div class="content-w3">
+		<h1>404</h1>
+		<h2>Something went wrong,</h2>
+    <br>
+    <h2>Page Not Found.</h2>
+    <br>
+    <h2>you may some illegal operations</h2>
+    <br>
+    <h2>please try again later.</h2>
+		<form class="mail-form-agile" action="../login/" method="post">
+      {% csrf_token %}
+      <input type="submit" name="Back" value="Go Back"/>
+    </form>
+	</div>
+</body>
